@@ -194,10 +194,16 @@ else
 
 void scrbuf_draw(void)
 {
-     
-       SDL_LockSurface(screen);
-
-#ifdef GP2X
+	SDL_LockSurface(screen);
+#if defined(POCKETGO)
+	for (int x = 0; x < 320; x++)
+		for (int y = 0; y < 240; y++)
+		{
+			Uint8 *p = (Uint8 *)screen->pixels + y * screen->pitch + x*4;
+			Uint8 c = scrbuf[x+y*320];
+			*(Uint32 *)p =ipal[c][2] + 256*ipal[c][1] + 65536*ipal[c][0];
+		}
+#elif defined(GP2X)
 if (CradleMode)
 for (int i=3200;i<73600;i++)
 {
@@ -210,8 +216,7 @@ for (int i=0;i<76800;i++)
 Uint8 *p = (Uint8 *)screen->pixels +i;
 *(Uint8 *)p =scrbuf[i];
 }
-#endif
-#ifdef PC
+#elif defined(PC)
 Uint16 x1,y1;
 for (int x=0;x<640;x++)
 for (int y=0;y<480;y++)
@@ -223,7 +228,8 @@ Uint8 c;
 c=scrbuf[x1+y1*320];
 *(Uint32 *)p =ipal[c][2]+256*ipal[c][1]+65536*ipal[c][0];
 }
-#endif 
+#endif
+
 SDL_UnlockSurface(screen);
        SDL_Flip(screen);
      

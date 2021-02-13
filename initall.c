@@ -7,6 +7,7 @@
 #include "monsters.h"
 #include "player.h"
 #include "globalvar.h"
+#include "logger.h"
 #define FPMUL(x,y)	((((x)>>6)*((y)>>6))>>4)
 
 
@@ -325,51 +326,53 @@ blockmapstatus[2]=STATUS_AI;
 
 void InitAll(void)
 {
+	logmsg();
+	s_initfont();
+	logmsg();
+	ClrScr();
+	logmsg();
+	LoadPalette();
+	logmsg();
+	l_textstring=sprintf(s_textstring,"Loading Genocide Generations Gaming engine...");
+	logmsg();
+	s_drawtext(5,0,15);
+	logmsg();
+	scrbuf_draw();
+	logmsg();
 
-s_initfont();
+	l_textstring=sprintf(s_textstring,"Loading TileSet...");
+	s_drawtext(5,24,14);
+	LoadTileSet();
+	scrbuf_draw();
+	l_textstring=sprintf(s_textstring,"Loading Models...");
+	s_drawtext(5,36,14);
+	scrbuf_draw();
+	loadmodels();// ^.^
+	l_textstring=sprintf(s_textstring,"Loading Sounds...");
+	s_drawtext(5,48,14);
+	scrbuf_draw();
+	initsounds();
+	l_textstring=sprintf(s_textstring,"Starting game...");
+	s_drawtext(5,60,14);
+	scrbuf_draw();
+	inittables();
+	initblockmap();
+	InitMonsterTable();
+	LoadAI();
+	InitPlayerStatus();
+	LoadPlayerStatus();
+	LoadPortraits();
+	LoadBNG();
+	ClrScr();
+	scrbuf_draw();
 
-ClrScr();
-LoadPalette();
+	fadecount=0;
+	//NewGameMode=EDITOR_MENU;//enchance this
 
-l_textstring=sprintf(s_textstring,"Loading Genocide Generations Gaming engine...");
-s_drawtext(5,0,15);
-scrbuf_draw();
+	//EditorOn=0;
+	//NewGameMode=LOADING_GAME;//enchance this
+	//GameMode=LOADING_GAME;
 
-
-
-
-l_textstring=sprintf(s_textstring,"Loading TileSet...");
-s_drawtext(5,24,14);
-LoadTileSet();
-scrbuf_draw();
-l_textstring=sprintf(s_textstring,"Loading Models...");
-s_drawtext(5,36,14);
-scrbuf_draw();
-loadmodels();// ^.^
-l_textstring=sprintf(s_textstring,"Loading Sounds...");
-s_drawtext(5,48,14);
-scrbuf_draw();
-initsounds();
-l_textstring=sprintf(s_textstring,"Starting game...");
-s_drawtext(5,60,14);
-scrbuf_draw();
-inittables();
-initblockmap();
-InitMonsterTable();
-LoadAI();
-InitPlayerStatus();
-LoadPlayerStatus();
-LoadPortraits();
-LoadBNG();
-ClrScr();
-scrbuf_draw();
-
-fadecount=0;
-//NewGameMode=EDITOR_MENU;//enchance this
-
-//EditorOn=0;
-//NewGameMode=LOADING_GAME;//enchance this
-//GameMode=LOADING_GAME;
-
-//NewGameMode=CLOSING_CREDITS;
+	//NewGameMode=CLOSING_CREDITS;
+	logmsg();
 }

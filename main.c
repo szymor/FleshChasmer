@@ -12,6 +12,8 @@
 #include "sfont.h"
 #include "initall.h"
 
+#include "logger.h"
+
 #define DEBUGON 1
 
 #ifdef GP2X
@@ -75,6 +77,7 @@ close(gp2x_dev);
 
 int main (int argc, char *argv[])
 {
+	logmsg();
 #ifdef PC
 fullscreen = false;
 #endif
@@ -90,7 +93,7 @@ for (int i=1; i < argc; ++i) {
 		return strcmp("--help", argv[i]);
 	}
 }
-
+	logmsg();
 #ifdef GP2X
 RamHack();
 //system("/sbin/insmod mmuhack.o");
@@ -101,41 +104,47 @@ RamHack();
 		exit (1);
 	}
 	SDL_ShowCursor(SDL_DISABLE);
-
+	logmsg();
 if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
     exit(1);
   }
 Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-
-#ifdef PC
+	logmsg();
+#if defined(POCKETGO)
+	screen = SDL_SetVideoMode (320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	if (screen == NULL) {
+		exit (2);
+	}
+#elif defined(GP2X)
+	screen = SDL_SetVideoMode (320, 240, 8, SDL_HWSURFACE || SDL_DOUBLEBUF);
+	if (screen == NULL) {
+		exit (2);
+	}
+#elif defined(PC)
 SDL_WM_SetCaption("FleshChasmer","");
 	screen = SDL_SetVideoMode (640, 480, 32, SDL_HWSURFACE | (fullscreen ? SDL_FULLSCREEN : 0));
 	if (screen == NULL) {
 		exit (2);
 	}
-	
 #endif
-#ifdef GP2X
-	screen = SDL_SetVideoMode (320, 240, 8, SDL_HWSURFACE || SDL_DOUBLEBUF);
-	if (screen == NULL) {
-		exit (2);
+	logmsg();
+	//load all
+	LoadConfig();
+	logmsg();
+	InitAll();
+	logmsg();
+	if (EditorOn)
+	{
+	GameMode=EDITOR_MENU;//enchance this
+	NewGameMode=EDITOR_MENU;//enchance this
 	}
-#endif
-//load all
-LoadConfig();
-InitAll();
-if (EditorOn)
-{
-GameMode=EDITOR_MENU;//enchance this
-NewGameMode=EDITOR_MENU;//enchance this
-}                
-else
-{
-NewGameMode=LOADING_GAME;//enchance this
-GameMode=LOADING_GAME;
-}
+	else
+	{
+	NewGameMode=LOADING_GAME;//enchance this
+	GameMode=LOADING_GAME;
+	}
 CradleMode=0;
-
+	logmsg();
 	if (SDL_NumJoysticks() > 0) {
 		joy = SDL_JoystickOpen(0);
 	}
@@ -147,17 +156,16 @@ CradleMode=0;
 	}
 #endif
 
-#ifdef GP2X
-#endif
-
-gameloop();
-
+	logmsg();
+	gameloop();
+	logmsg();
     Mix_CloseAudio();
 	SDL_Quit();
-SaveConfig();
+	SaveConfig();
 #ifdef GP2X
 	chdir("/usr/gp2x");
 	execl("/usr/gp2x/gp2xmenu", "/usr/gp2x/gp2xmenu", NULL);
 #endif
+	logmsg();
 	return 0;
 }

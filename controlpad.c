@@ -7,9 +7,15 @@ static const Sint8 angle_detection[9]=
  6,-1, 2,
  5, 4, 3};
 int i_keyb[19];
+#if defined(POCKETGO)
+static const SDLKey sd_keyb[19]={SDLK_UP,SDLK_e,SDLK_RIGHT,SDLK_c,SDLK_DOWN,SDLK_z,SDLK_LEFT,SDLK_q,
+SDLK_LCTRL,SDLK_LALT,SDLK_SPACE,SDLK_LSHIFT,SDLK_PAGEUP,SDLK_PAGEDOWN,SDLK_TAB,SDLK_BACKSPACE,SDLK_ESCAPE,SDLK_RETURN,SDLK_RCTRL
+};
+#else
 static const SDLKey sd_keyb[19]={SDLK_w,SDLK_e,SDLK_d,SDLK_c,SDLK_x,SDLK_z,SDLK_a,SDLK_q,
 SDLK_f,SDLK_g,SDLK_h,SDLK_t,SDLK_r,SDLK_y,SDLK_4,SDLK_5,SDLK_b,SDLK_n,SDLK_s
 };
+#endif
 static const int sd_key_ref[11]=
 {
 PAD_A,PAD_B,PAD_X,PAD_Y,PAD_L1,PAD_R1,PAD_L2,PAD_R2,PAD_SELECT,PAD_START,PAD_Z 
