@@ -195,7 +195,7 @@ else
 void scrbuf_draw(void)
 {
 	SDL_LockSurface(screen);
-#if defined(POCKETGO)
+#if defined(POCKETGO) || defined(RETROFW)
 	for (int x = 0; x < 320; x++)
 		for (int y = 0; y < 240; y++)
 		{

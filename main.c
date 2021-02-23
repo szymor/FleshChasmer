@@ -110,7 +110,7 @@ if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
   }
 Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
 	logmsg();
-#if defined(POCKETGO)
+#if defined(POCKETGO) || defined(RETROFW)
 	screen = SDL_SetVideoMode (320, 240, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (screen == NULL) {
 		exit (2);
