@@ -42,4 +42,5 @@ $(OPK): $(BIN) fleshchasmer.retrofw.desktop FleshChasmer.png README.md
 	cp FleshChasmer.png $(OPKDIR)/
 	cp README.md $(OPKDIR)/
 	cp -R data $(OPKDIR)/
+	$(RM) $(OPKDIR)/data/savecard.000 $(OPKDIR)/data/config.cfg
 	mksquashfs $(OPKDIR) $@ -noappend -no-xattrs

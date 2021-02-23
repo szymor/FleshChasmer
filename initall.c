@@ -8,30 +8,40 @@
 #include "player.h"
 #include "globalvar.h"
 #include "logger.h"
+#include "storage.h"
 #define FPMUL(x,y)	((((x)>>6)*((y)>>6))>>4)
 
 
 void LoadConfig(void)
 {
 FILE *fp;Uint8 c;
-fp=fopen("data/config.cfg","rb");
+fp=fopen(getConfigPath(),"rb");
 if (fp)
 {
-volume=fgetc(fp);
-SoundMode=fgetc(fp);
-ControlMode=fgetc(fp);
-CameraMode=fgetc(fp);
-MonsterHpMode=fgetc(fp);
-showmap=fgetc(fp);
-
+	volume=fgetc(fp);
+	SoundMode=fgetc(fp);
+	ControlMode=fgetc(fp);
+	CameraMode=fgetc(fp);
+	MonsterHpMode=fgetc(fp);
+	showmap=fgetc(fp);
+	fclose(fp);
 }
-fclose(fp);     
+else
+{
+	// default settings
+	volume = 128;
+	SoundMode = 0;
+	ControlMode = 1;
+	CameraMode = 0;
+	MonsterHpMode = 1;
+	showmap = 1;
+}
 
 }
 void SaveConfig(void)
 {
 FILE *fp;Uint8 c;
-fp=fopen("data/config.cfg","wb");
+fp=fopen(getConfigPath(),"wb");
 fputc(volume,fp);
 fputc(SoundMode,fp);
 fputc(ControlMode,fp);

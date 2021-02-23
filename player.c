@@ -4,12 +4,13 @@
 #include <sfont.h>
 #include <render.h>
 #include <game.h>
-
+#include <storage.h>
 #include <sound.h>
 #include <skills.h>
 #include <interface.h>
 #include <items.h>
 #include <SDL.h>
+
 void damage_meleeweapon(void)
 {
 if (level_tag==0)
@@ -221,7 +222,7 @@ iGameTime=0;
 void LoadPlayerStatus(void)
 {// LOADInG beGiNZ!
 FILE *fp;Uint8 c;
-fp=fopen("data/savecard.000","rb");
+fp=fopen(getSavecardPath(),"rb");
 
 if (fp)
 {
@@ -354,7 +355,7 @@ scrbuf[x+210*320]=16;
 
 //SAVI/ng already
 Uint8 c;
-fp=fopen("data/savecard.000","wb");
+fp=fopen(getSavecardPath(),"wb");
 fputc(iGameTime/16777216%256,fp);
 fputc(iGameTime/65536%256,fp);
 fputc(iGameTime/256%256,fp);
