@@ -7,7 +7,6 @@ SRC = $(wildcard ./*.c)
 OBJS = $(subst ./,build/,$(SRC))
 OBJ = $(OBJS:.c=.o)
 
-
 LIBS = -lSDL_mixer -lSDLmain -lSDL
 INCS =  -I"$(SYSROOT)/usr/include/SDL" -I"./"
 BIN  = FleshChasmer
@@ -15,9 +14,13 @@ FLAGS = $(INCS) -DPC -DRETROFW -fpermissive -fexpensive-optimizations -O3 -Wall 
 RM = rm -f
 MKDIR = mkdir -p
 
-.PHONY: clean
+OPK = fleshchasmer.opk
+OPKDIR = opk
 
-all: all-before FleshChasmer
+.PHONY: clean all all-before opk
+
+all: all-before $(BIN)
+opk: $(OPK)
 
 all-before:
 	$(MKDIR) "build"
@@ -31,3 +34,12 @@ $(BIN): $(OBJ)
 build/%.o : ./%.c
 	$(CPP) -c $< -o $@ $(FLAGS)
 
+$(OPK): $(BIN) fleshchasmer.retrofw.desktop FleshChasmer.png README.md
+	rm -rf $(OPKDIR)
+	$(MKDIR) $(OPKDIR)
+	cp fleshchasmer.retrofw.desktop $(OPKDIR)/
+	cp $(BIN) $(OPKDIR)/
+	cp FleshChasmer.png $(OPKDIR)/
+	cp README.md $(OPKDIR)/
+	cp -R data $(OPKDIR)/
+	mksquashfs $(OPKDIR) $@ -noappend -no-xattrs

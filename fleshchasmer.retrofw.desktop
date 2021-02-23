@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=FleshChasmer
+Comment=Hardcore 3D Action RPG (18+)
+Exec=FleshChasmer
+Terminal=false
+Type=Game
+StartupNotify=true
+Icon=FleshChasmer
+Categories=games;
+X-OD-Manual=README.md
