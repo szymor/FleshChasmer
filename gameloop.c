@@ -25,44 +25,85 @@ Uint32 delta=tickcount-ltickcount;
 if (delta<50) SDL_Delay(50-delta);
 }
 */
+
+#if defined(GP2X)
 void gameloop(void)
 {
-
 	while (GameLoopEnabled)
 	{
-	      
-       if (GameMode==NewGameMode)
-       {
-       Gameprocess();
-       Render();fps_done++;
-       }
-       else RenderFade();
+		if (GameMode==NewGameMode)
+		{
+			Gameprocess();
+			Render();
+			fps_done++;
+		}
+		else
+		{
+			RenderFade();
+		}
 
-#ifdef PC
-SDL_Delay(55);
-#endif
-#ifdef GP2X
+		switch (GameMode)
+		{
+			case LOADING_EDITOR: SDL_Delay(40); break;
+			case CLOSING_CREDITS: SDL_Delay(40); break;
+			case LOADING_GAME: SDL_Delay(40); break;
+			case MAINMENU: SDL_Delay(40); break;
+			case PLAYER_NAME: SDL_Delay(40); break;
+			case CHARACTERMENU: SDL_Delay(40); break;
+			case EDITOR_MENU: SDL_Delay(30); break;
+			case INTRO: SDL_Delay(30); break;
+			case EDITOR_AI: SDL_Delay(40); break;
+			case EDITOR_PALETTE: SDL_Delay(40); break;
+			case EDITOR_TEXTURE: SDL_Delay(40); break;
+		}
 
-     switch (GameMode)
-      {
-       case LOADING_EDITOR:SDL_Delay(40);break;
-       case CLOSING_CREDITS:SDL_Delay(40);break;
-       case LOADING_GAME:SDL_Delay(40);break;
-       case MAINMENU:SDL_Delay(40);break;
-       case PLAYER_NAME:SDL_Delay(40);break;
-       case CHARACTERMENU:SDL_Delay(40);break;
-       case EDITOR_MENU:SDL_Delay(30);break;
-       case INTRO:SDL_Delay(30);break;
-       case EDITOR_AI:SDL_Delay(40);break;
-       case EDITOR_PALETTE:SDL_Delay(40);break;
-       case EDITOR_TEXTURE:SDL_Delay(40);break;
-      }
-#endif
-tickcount=SDL_GetTicks();    
-//SDL_Delay(5);//SDL_Mixer.h wants you
-       count++;
-       calcfps();
- 	}
-     
-     
+		tickcount=SDL_GetTicks();
+		count++;
+		calcfps();
+	}
 }
+#elif defined(PC)
+static void limitfps(void)
+{
+	static Uint32 curTicks = 0;
+	static Uint32 lastTicks = 0;
+	const Uint32 delay = 120;
+	Uint32 t;
+
+	curTicks = SDL_GetTicks();
+	if (lastTicks == 0)
+	{
+		lastTicks = curTicks;
+		return;
+	}
+
+	t = curTicks - lastTicks;
+	lastTicks = curTicks;
+
+	if (t < delay)
+		SDL_Delay(delay - t);
+}
+
+void gameloop(void)
+{
+	while (GameLoopEnabled)
+	{
+		if (GameMode==NewGameMode)
+		{
+			Gameprocess();
+			Render();
+			fps_done++;
+		}
+		else
+		{
+			RenderFade();
+		}
+
+		limitfps();
+
+		tickcount=SDL_GetTicks();
+		count++;
+		calcfps();
+ 	}
+}
+#endif
